@@ -1,0 +1,4062 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>淘宝首页</title>
+	<link rel="stylesheet" type="text/css" href="css/淘宝头部.css">
+	<link rel="stylesheet" href="css/淘宝电梯.css" />
+	<script type="text/javascript" src="javascript/alexjs.js"></script>
+	<script type="text/javascript">
+	window.onload = function(){
+		// function $(id){
+		// 	return document.getElementById(id);
+		// }
+		var lift = $("#lift");
+		var liftLis = $("#lift_lis");
+		var lis = liftLis.children;
+		var wrapperLift = $("#wrapper_lift");
+		var oftenVisit = $("#often_visit");
+		var oftenVisitlis = oftenVisit.children;
+		console.log(oftenVisitlis);
+		var fashionKing = $("#fashion_king");
+		var quality = $("#quality");
+		var feature = $("#feature");
+		var cheap = $("#cheap");
+		var guess = $("#guess");
+		var AlexSuspensionSearch =$("#Alex_suspension_search");
+		var searchCombobox = $(".search-combobox")[0];
+		// var gjcSearch = $("#gjc_search");
+
+		var box = [oftenVisit,fashionKing,quality,feature,cheap,guess];
+		var fontColor = ["#fff","#FF0055","#8D7AFB","#A8C001","#A2745B","#FF4400"];
+		var liftImg = ["images/icon1.png","images/lift2.jpg","images/lift3.jpg","images/lift4.jpg","images/lift5.jpg","images/lift6.jpg"]
+		
+		var oftenBorderColor = ["","#406CC0","#E9A326","#E44346","#FE6FA6",""];
+
+
+		// 我常逛的鼠标悬浮效果		
+		for (var i = 0; i < oftenVisitlis.length; i++) {
+			oftenVisitlis[i].index = i;
+			oftenVisitlis[i].onmouseover = function(){
+				this.style.borderColor = oftenBorderColor[this.index];
+			}
+			oftenVisitlis[i].onmouseout = function(){
+				this.style.borderColor = "";
+			}
+		}
+		
+		// console.log(box);
+		// 右侧电梯点击事件
+		for (var i = 0; i < lis.length; i++) {
+			lis[i].index = i;
+			lis[i].onclick = function(){
+				for (var i = 0; i < lis.length; i++) {
+					lis[i].style.backgroundColor = "white";
+					lis[i].style.backgroundImage = "";
+					lis[i].style.color = fontColor[lis[i].index];
+				}				
+				this.style.backgroundImage = "url("+liftImg[this.index]+")";			
+				this.style.color = "white";
+				var scrollTop = box[this.index].offsetTop+wrapperLift.offsetTop-AlexSuspensionSearch.offsetHeight;
+				//有问题,点击右侧电梯滚动页面时,滚动条会跳一下,起始值有问题?
+				constantAnimationWindow(window.pageYOffset,scrollTop);
+
+				autoScroll = true;
+				window.scrollTo(0, scrollTop);
+				autoScroll = false;
+			}
+		}
+		var autoScroll = false;
+		var liftReferHeight = lift.offsetTop;
+		window.onscroll = function(){
+			for (var i = 0; i < box.length; i++) {//电梯随楼层移动而改变的代码
+				var boxSection = box[i].offsetTop+box[i].offsetHeight+wrapperLift.offsetTop-AlexSuspensionSearch.offsetHeight;
+
+				if (window.pageYOffset <= boxSection-AlexSuspensionSearch.offsetHeight) {
+					// console.log(i);
+					for (var j = 0; j < lis.length; j++) {
+						lis[j].index = j;
+						lis[j].style.backgroundColor = "white";
+						lis[j].style.backgroundImage = "";
+						lis[j].style.color = fontColor[lis[j].index];
+					}
+					// lis[i].style.backgroundColor = "orange";
+					lis[i].style.backgroundImage = "url("+liftImg[lis[i].index]+")";
+					lis[i].style.color = "white";
+					break;
+					//有问题,猜你喜欢的top距离不对
+				}
+
+			}
+			//悬浮框随窗口滚动而出现或消失代码
+			var scrollHeight = window.pageYOffset;//窗口滚动的距离
+			var searchReferHeight = searchCombobox.offsetTop+searchCombobox.offsetHeight;
+
+			if (scrollHeight>searchReferHeight) {
+				AlexSuspensionSearch.style.display = "block";
+			}else{
+				AlexSuspensionSearch.style.display = "none";
+			}
+			console.log(AlexSuspensionSearch.offsetHeight);
+			//右边电梯按钮悬浮
+			if (scrollHeight>(liftReferHeight-AlexSuspensionSearch.offsetHeight)) {
+				lift.style.position = "fixed";
+				lift.style.top = AlexSuspensionSearch.offsetHeight+"px";
+			}else{
+				lift.style.position = "absolute";
+				lift.style.top = liftReferHeight+"px";
+			}
+		}//window.onscroll的尾巴
+		
+		var screenList = $("#screen_list");
+		var themes = screenList.children;
+		console.log(screenList);
+		console.log(themes);
+		var alexNavContent = $("#alex_nav_contant");
+
+
+		//鼠标悬浮到列表时列表右框显示,列表颜色改变
+		for (var i = 0; i < themes.length; i++) {
+			themes[i].onmouseover = function(){
+				for (var i = 0; i < themes.length; i++) {
+					themes[i].style.backgroundColor = "";
+				}
+				this.style.backgroundColor = "#FF4400";
+				alexNavContent.style.display = "block";
+				alexNavContent.innerHTML = this.innerHTML;
+			}
+			themes[i].onmouseleave = function(){
+				this.style.backgroundColor = "";
+				alexNavContent.style.display = "none";
+			}
+		}
+
+		var screenList = $("#screen_list");
+		var alexBannerTop = $("#alex_banner_top");
+		var alexBtnNext = $("#alex_btn_next");
+		var alexBtnPrev = $("#alex_btn_prev"); 
+		
+		var alexBannerTopCurrent = 0;
+		var alexBannerTopTarget = 0;
+		var alexCurrentIndex = 0;
+
+		alexBtnNext.onclick = function(){//点击下一个按钮 banner图片往右走			
+			toNext();
+		}
+
+		function toNext(){//图片往右走的动画封装
+			if (alexCurrentIndex == 5) {
+				alexBannerTop.style.left = 0;
+				alexBannerTopCurrent = 0;
+				alexBannerTopTarget = 0;
+				alexCurrentIndex = 0;
+			}
+			alexBannerTopTarget -= 520;
+			variableAnimation(alexBannerTop,alexBannerTopCurrent,alexBannerTopTarget,"left");
+			alexBannerTopCurrent = alexBannerTopTarget;
+			alexCurrentIndex++;
+			changeIndicator();
+		}
+		alexBtnPrev.onclick = function(){
+			if (alexCurrentIndex == 0) {
+				alexBannerTop.style.left = -520*5+"px";
+				alexBannerTopCurrent = -520*5;
+				alexBannerTopTarget = -520*5;
+				alexCurrentIndex = 5;
+			}
+			alexBannerTopTarget += 520;
+			variableAnimation(alexBannerTop,alexBannerTopCurrent,alexBannerTopTarget,"left");
+			alexBannerTopCurrent = alexBannerTopTarget;
+			alexCurrentIndex--;
+			changeIndicator();
+		}
+
+		// banner图片自动往右走的定时器
+		var alexBannerWrapper = $("#alex_banner_wrapper");
+		var autoTimer = setInterval(toNext, 3000);
+		alexBannerWrapper.onmouseover = function(){
+			clearInterval(autoTimer);
+		}
+		alexBannerWrapper.onmouseout = function(){
+			autoTimer = setInterval(toNext, 3000);
+		}
+
+		var alexIndicators = $("#alex_indicator");
+		var alexIndicator = alexIndicators.children;
+		for (var i = 0; i < alexIndicator.length; i++) {
+			alexIndicator[i].index = i;
+			alexIndicator[i].onclick = function(){
+				alexCurrentIndex = this.index;
+				//改变指示器
+				changeIndicator();
+				//改变banner图片
+				alexBannerTopTarget = this.index*-520;
+				variableAnimation(alexBannerTop,alexBannerTopCurrent,alexBannerTopTarget,"left");
+				alexBannerTopCurrent = alexBannerTopTarget;
+			}
+		}
+		function changeIndicator(){//改变指示器的函数
+			for (var i = 0; i < alexIndicator.length; i++) {
+				alexIndicator[i].style.backgroundColor = "#B7B7B7";
+			}
+			if (alexCurrentIndex == 5) {
+				alexIndicator[0].style.backgroundColor = "#FF6537";
+			}else{
+				alexIndicator[alexCurrentIndex].style.backgroundColor = "#FF6537";
+			}
+			
+		}
+
+		// 下面的banner
+		var alexBtn2Prev = $("#alex_btn2_prev");
+		var alexBtn2Next = $("#alex_btn2_next");
+		var alexBannerBot = $("#alex_banner_bot");
+		var alexBanner = alexBannerBot.children;
+		var alexBannerBotCurrent = 0;
+		var alexBannerBotTarget = 0;
+		var alexCurrent2Index = 0;
+		function toNext2(){
+			if (alexCurrent2Index == 6) {
+				alexBannerBot.style.left = 0;
+				alexBannerBotCurrent = 0;
+				alexBannerBotTarget = 0;
+				alexCurrent2Index = 0;
+			}
+			alexBannerBotTarget -= 520;
+			variableAnimation(alexBannerBot,alexBannerBotCurrent,alexBannerBotTarget,"left");
+			alexBannerBotCurrent = alexBannerBotTarget;
+			alexCurrent2Index++;
+			changeIndicator2();
+		}
+		alexBtn2Next.onclick = function(){
+			toNext2();			
+		}
+
+
+		alexBtn2Prev.onclick = function(){
+			if (alexCurrent2Index == 0) {
+				alexBannerBot.style.left = -520*6+"px";
+				alexBannerBotCurrent = -520*6;
+				alexBannerBotTarget = -520*6;
+				alexCurrent2Index = 6;
+			}
+			alexBannerBotTarget += 520;
+			variableAnimation(alexBannerBot,alexBannerBotCurrent,alexBannerBotTarget,"left");
+			alexBannerBotCurrent = alexBannerBotTarget;
+			alexCurrent2Index--;
+			changeIndicator2();
+		}
+		var tmallBd = $(".tmall-bd")[0];
+		var botTimer = setInterval(toNext2, 3000);
+		tmallBd.onmouseover = function(){
+			clearInterval(botTimer);
+		}
+		tmallBd.onmouseout = function(){
+			botTimer = setInterval(toNext2, 3000);
+		}
+
+		var alexIndicators2 = $("#alex_indicators2");
+		var alexIndicator2 = alexIndicators2.children;
+
+		function changeIndicator2(){
+			for (var i = 0; i < alexIndicator2.length; i++) {
+				alexIndicator2[i].style.backgroundColor = "#B7B7B7";
+			}
+			if (alexCurrent2Index == 6) {
+				alexIndicator2[0].style.backgroundColor = "#FF6537";
+			}else{
+				alexIndicator2[alexCurrent2Index].style.backgroundColor = "#FF6537";
+			}
+		}
+
+		for (var i = 0; i < alexIndicator2.length; i++) {
+			alexIndicator2[i].index = i;
+			alexIndicator2[i].onclick = function(){
+				alexCurrent2Index = this.index;
+				changeIndicator2();
+				alexBannerBotTarget = this.index*-520;
+				variableAnimation(alexBannerBot,alexBannerBotCurrent,alexBannerBotTarget,"left");
+				alexBannerBotCurrent = alexBannerBotTarget;
+			}
+		}
+
+		//我常逛的小动画
+		// 写法一
+		// for (var i = 0; i < 4; i++) {
+		// 	var alexOftenBotAni = $(".alex-often-bot-ani")[i];
+		// 	var alexAniTop = $(".alex-ani-top")[i];
+		// 	var oftenCurrent = alexOftenBotAni.offsetTop;
+		// 	var oftenTarget = alexOftenBotAni.offsetTop-alexOftenBotAni.offsetHeight+alexAniTop.offsetHeight;
+		// 	alexOftenBotAni.onmouseover = function(){
+		// 		variableAnimation(this,oftenCurrent,oftenTarget,"top");
+		// 	}
+		// 	alexOftenBotAni.onmouseout = function(){
+		// 		variableAnimation(this,oftenTarget,oftenCurrent,"top");
+		// 	}		
+		// }
+
+
+		// 写法二
+		var alexOftenBotAni = $(".alex-often-bot-ani");
+		var alexAniTop = $(".alex-ani-top");
+
+		for (var i = 0; i < alexOftenBotAni.length; i++) {
+			var oftenCurrent = alexOftenBotAni[i].offsetTop;
+			var oftenTarget = alexOftenBotAni[i].offsetTop-alexOftenBotAni[i].offsetHeight+alexAniTop[i].offsetHeight;
+			alexOftenBotAni[i].onmouseover = function(){
+				variableAnimation(this,oftenCurrent,oftenTarget,"top");
+			}
+			alexOftenBotAni[i].onmouseout = function(){
+				variableAnimation(this,oftenTarget,oftenCurrent,"top");
+			}
+		}
+
+		//右侧登录下面的鼠标经过效果
+		var alexConve = $("#alex_conve");
+		var alexConveList = $("#alex_conve_list").children;
+		console.log(alexConveList);
+		for (var i = 0; i < alexConveList.length; i++) {
+			alexConveList[i].onmouseover = function(){
+				for (var j = 0; j < alexConveList.length; j++) {
+					alexConveList[j].style.borderColor = "#EAEAEA";
+					alexConveList[j].style.borderBottom = "#EAEAEA";
+				}
+				this.style.borderColor = "#FF4400";
+				// this.style.borderBottom = "white";
+				alexConve.style.display = "block";
+				alexConve.style.borderTop = "white";
+
+			}
+		}
+
+		//鼠标悬浮橙色框出现
+		var fashionList = $(".fashion-list");
+		console.log(fashionList);
+		var fanList = fashionList.children;
+		for (var i = 0; i < fashionList.length; i++) {
+			fashionList[i].onmouseover = function(){
+				this.style.borderColor = "#FF4400";
+			}
+			fashionList[i].onmouseout = function(){
+				this.style.borderColor = "#EAEAEA";
+			}
+		}
+		
+		//实惠
+		var cheap1 = $(".cheap1");
+		console.log(cheap1);
+		var cheapLi1 = cheap1[0].children;
+		console.log(cheapLi1);
+		//有问题,报错
+		for (var i = 0; i < cheapLi1.length; i++) {
+			cheapLi1[i].onmouseover = function(){
+				this.style.borderColor = "#FF4400";
+			}
+			cheapLi1[i].onmouseover = function(){
+				this.style.borderColor = "#F0F0F0";
+			}
+		}
+
+		
+		// var cheap2 = $(".cheap2");
+		// console.log(cheap2);
+		// var cheapLi2 = cheap2.children;
+		// for (var i = 0; i < cheapLi2.length; i++) {
+		// 	cheapLi2[i].onmouseover = function(){
+		// 		this.style.borderColor = "#FF4400";
+		// 	}
+		// 	cheapLi2[i].onmouseover = function(){
+		// 		this.style.borderColor = "#F0F0F0";
+		// 	}
+
+		// }
+
+		// 猜你喜欢动画
+		var guessList = $("#guess_list");
+		var guessItems = guessList.children;
+		// var guessItems = guessList.children[0].children;
+		// console.log(guessItems[0]);
+		// var aLexGuess = $(".ALex-guess");
+		for (var i = 0; i < guessItems.length; i++) {
+				guessItems[i].onmouseover = function(){
+					this.style.borderColor = "#FF4400";
+					this.children[2].style.display = "block";
+
+				}
+				//有问题,报错
+				guessItems[i].onmouseout = function(){
+					this.style.borderColor = "#fff";
+					this.children[2].style.display = "none";
+				}
+			}
+	}
+
+//window.onload尾巴
+
+</script>
+</head>
+<body>
+	
+	<div id="Alex_suspension_search"></div>
+	<div id="lift">
+		<ul id="lift_lis">
+			<li class="lis-style1">我常逛的</li>
+			<li class="lis-style2" style="color: #FF0055;">时尚</li>
+			<li class="lis-style2" style="color: #8D7AFB;">品质</li>
+			<li class="lis-style2" style="color: #A8C001;">特色</li>
+			<li class="lis-style2" style="color: #A2745B;">实惠</li>			
+			<li class="lis-style1" style="color: #FF4400;">猜你喜欢</li>
+		</ul>
+		<ul id="lift_lis1">
+			<li class="lis-style2">顶部</li>
+			<li class="lis-style2">反馈</li>
+			<li class="lis-style1">反恐举报</li>
+		</ul>
+	</div>
+
+	<!-- 郭锦城 -->
+	<div>
+		<div style="width:100%;">
+			<div id="gjc_J_Cover" style="margin:0px auto;"> 
+				<div id="gjc_J_SiteNav">
+					<ul id="J_SiteNavBdL" class="fl">
+						<li class="fl h">亲，请登录</li>
+						<li class="fl ml">免费注册</li>
+						<li class="fl ml">手机逛淘宝</li>
+					</ul>
+					<ul class="fl" id="J_SiteNavBdR">
+						<li class="fl plr" style="width:67px;height:35px;padding: 0px 5px;">
+							我的淘宝
+							<div class="menu-bd-panel">
+								<dl>
+									<dd class="ddcss">已买到的宝贝</dd>
+									<dd class="ddcss" style="margin-top:2px;">我的足迹</dd>
+								</dl>
+							</div>
+						</li>
+						<li class="fl plr" style="width:80px;height:35px;padding: 0px 6px;">
+							购物车 <strong class="h">0</strong>
+						</li>
+						<li class="fl" style="width:72px;height:35px;padding: 0px 5px;">
+							收藏夹
+							<div class="menu-bd-panel">
+								<dl>
+									<dd class="ddcss">收藏的宝贝</dd>
+									<dd class="ddcss" style="margin-top:2px;">收藏的店铺</dd>
+								</dl>
+							</div>
+						</li>
+						<li class="fl" style="width:55px;height:35px;padding: 0px 5px;">商品分类</li>
+						<li class="fl" style="width:5px;height:35px;padding: 0px 5px;">|</li>
+						<li class="fl" style="width:67px;height:35px;padding: 0px 5px;">
+							卖家中心
+							<div class="menu-bd-panel">
+								<dl>
+									<dd class="ddcss" style="margin-top:2px;">免费开店</dd>
+									<dd class="ddcss" style="margin-top:2px;">已卖出的宝贝</dd>
+									<dd class="ddcss" style="margin-top:2px;">出售中的宝贝</dd>
+									<dd class="ddcss" style="margin-top:2px;">卖家服务市场</dd>
+									<dd class="ddcss" style="margin-top:2px;">卖家培训中心</dd>
+									<dd class="ddcss" style="margin-top:2px;">体检中心</dd>
+									<dd class="ddcss" style="margin-top:2px;">问商友</dd>
+								</dl>
+							</div>
+						</li>
+						<li class="fl" style="width:67px;height:35px;padding: 0px 5px;">联系客户</li>
+						<li class="fl" style="width:84px;height:35px;padding: 0px 5px;">
+							网站导航
+							<div class="site-nav-menu-bd">
+								<div class="sitemap-mod-wrap">
+									<div>
+										<h3 style="color:#fc4200;margin-left:10px;">主题市场</h3>
+									</div>
+									<div style="margin-left:10px;">
+										<ul>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="sitemap-mod-wrap">
+									<div>
+										<h3 style="color:#9fb838;margin-left:10px;">特色市场</h3>
+									</div>
+									<div style="margin-left:10px;">
+										<ul>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="sitemap-mod-wrap">
+									<div>
+										<h3 style="color:#d75696;margin-left:10px;">啊里APP</h3>
+									</div>
+									<div style="margin-left:10px;">
+										<ul>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="sitemap-mod-wrap">
+									<div>
+										<h3 style="color:#2e9fdb;margin-left:10px;">精彩推荐集</h3>
+									</div>
+									<div style="margin-left:10px;">
+										<ul>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+											<li style="width:24%;" class="fl">女装</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div id="gjc_J_Banner">
+					<img src="image/TB1myRJRVXXXXcjXpXXXXXXXXXX-1190-80.jpg" style="margin-left:80px;">
+				</div>
+			</div>
+			<div class="J_Cup" style="margin:0px auto;">
+				<div class="fl" style="margin-left:80px;width:190px;height:140px;">
+					<img src="image/TB17zkIRFXXXXcdaXXXXXXXXXXX-190-140.gif">
+				</div>
+				<div class="tbh-search fl">
+					<div id="J_SearchTab">
+						<ul>
+							<li class="fl selected" style="font-weight: 700;background-color: #FF5400;color: white;">宝贝</li>
+							<li class="fl">天猫</li>
+							<li class="fl">店铺</li>
+						</ul>
+					</div>
+					<div class="search-combobox" id="gjc_search">
+						<input id="q" type="text" placeholder="男士短袖爸爸装" class="fl">
+						<div class="search-button fl">
+							<button class="btn-search">搜索</button>
+						</div>
+					</div>
+					<div class="search-ft">
+						<ul>
+							<li class="fl" style="color: #F40;">电子秤</li>
+							<li class="fl">体重秤</li>
+							<li class="fl" style="color: #F40;">无人机</li>
+							<li class="fl">时尚连衣裙</li>
+							<li class="fl">t恤</li>
+							<li class="fl" style="color: #F40;">新款男鞋</li>
+							<li class="fl">男士T恤</li>
+							<li class="fl">女士凉鞋</li>
+							<li class="fl">男短裤</li>
+							<li class="fl">妈妈装</li>
+							<li class="fl">男士凉鞋</li>
+						</ul>
+						<div style="position: absolute;top:5px;right:0px;">
+							更多
+							<span>></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="wrapper" style="margin:0px auto;">
+				<!--  -->
+				<div style="width:1349px;height:33px;background:white;">
+					<div class="J_Nav">
+						<div class="tb-icon fl" style="width:185px;height:33px;">
+							<h3 class="">主题市场</h3>
+						</div>
+						<div class="nav fl">
+							<ul class="nav-hd fl" style="width: 205px;height: 30px;">
+								<li class="fl li1">天猫</li>
+								<li class="fl li1">聚划算</li>
+								<li class="fl li1">天猫超市</li>
+							</ul>
+							<ul class="nav-hd fl" style="width:352.938;height:30px;">
+								<li class="fl pipe " style="padding: 0px 2px;">|</li>
+								<li class="fl" style="margin-left:7px;padding: 0px 5px;">淘抢购</li>
+								<li class="fl" style="margin-left:7px;padding: 0px 5px;">电器城</li>
+								<li class="fl" style="margin-left:7px;padding: 0px 5px;">司法拍卖</li>
+								<li class="fl" style="margin-left:7px;padding: 0px 5px;">中国质造</li>
+								<li class="fl" style="margin-left:7px;padding: 0px 5px;">特色中国</li>
+							</ul>
+							<ul class="nav-hd fl">
+								<li class="fl pipe" style="padding: 0px 2px;">|</li>
+								<li class="fl" style=" color:#3C3C3C;padding: 0px 5px;margin-left:7px;">飞猪旅行</li>
+								<li class="fl" style="padding: 0px 5px;margin-left:7px;">智能生活</li>
+								<li class="fl" style="padding: 0px 5px;margin-left:7px;">苏宁易购</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!--  -->
+				<div class="screen-outer">
+					<div class="fl" style="width:890px;height:600px;margin-left:80px;">
+						<div class="screen-outer_left fl">
+							<ul id="screen_list">
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+								<li>
+									女装/男装/内衣
+									<span>></span>
+								</li>
+							</ul>
+							<div id="alex_nav_contant"></div>
+							<div>
+								<img src="image/01.jpg">
+							</div>
+						</div>
+						<div class="J_Core fl">
+							<!--  -->
+							<div id="alex_banner_wrapper"style="width:520px;height:280px;position: relative;overflow:hidden;">
+								<ul id="alex_banner_top">
+									<li class="fl"><img src="images/b1.jpg" alt="" width="520px"/></li>
+									<li class="fl"><img src="images/b2.jpg" alt="" width="520px"/></li>
+									<li class="fl"><img src="images/b3.jpg" alt="" width="520px"/></li>
+									<li class="fl"><img src="images/b4.jpg" alt="" width="520px"/></li>
+									<li class="fl"><img src="images/b.jpg" alt="" width="520px"/></li>
+									<li class="fl"><img src="images/b1.jpg" alt="" width="520px"/></li>
+								</ul>
+								<div id="alex_btn_prev"><</div>
+								<div id="alex_btn_next">></div>
+
+								<!-- <img src="image/02.jpg"> -->
+								<ul class="promo-nav" id="alex_indicator">
+									<li class="fl"></li>
+									<li class="fl"></li>
+									<li class="fl"></li>
+									<li class="fl"></li>
+									<li class="fl"></li>
+								</ul>
+							</div>
+							<!--  -->
+							<!--  -->
+							<div class="tmall">
+								<!--  -->
+								<div class="tmall-hd">
+									<h2 class="fl">
+										<img src="image/03.gif">天猫必逛
+									</h2>
+									<span style="margin-top:12px;font-weight: normal;color:#666;" class="fl">热门品牌,天天上天猫!
+									</span>
+								</div>
+								<!--  -->
+								<div class="tmall-bd">
+									<div id="alex_btn2_prev"><</div>
+									<div id="alex_btn2_next">></div>
+									<div id="alex_banner_bot"style="position: absolute; overflow: hidden; width: 4160px;opacity: 1; ">
+										<!--  -->
+
+										<div style="width:520px;height:201px;" id="alex_ban_bot1">
+											<div class="fl" style="width:172px;height:201px;border-right:1px solid #EBEBEB;">
+
+												<img src="image/04.jpg" width="172px" height="201px">
+											</div>
+											<div class="fl" style="width:172px;height:201px;border-right:1px solid #EBEBEB;">
+												<div style="width:172px;height:100px;border-bottom:1px solid #EBEBEB;">
+													<img src="image/05.jpg" width="172px" height="100">
+												</div>
+												<div>
+													<img src="image/07.jpg" width="172px" height="100">
+												</div>
+											</div>
+											<div class="fl" style="width:172px;height:201px;border-right:1px solid #EBEBEB;">
+												<div style="width:173px;height:100px;border-bottom:1px solid #EBEBEB;">
+													<img src="image/06.jpg" width="172px" height="100">
+												</div>
+												<div>
+													<img src="image/08.jpg" width="172px" height="100">
+												</div>
+											</div>
+										</div>
+										<!--  -->
+										<div id="alex_ban_bot2">
+											<img src="images/b1-1.jpg" alt="" width="251px" height="190px" style="margin-top:5px;margin-right:4px;margin-left:6px;"/>
+											<img src="images/b1-2.jpg" alt="" width="251px" height="190px" style="margin-top:5px;margin-right:4px"/>
+
+										</div>
+
+										<div id="alex_ban_bot3">
+											<img src="images/b5-1.jpg" alt="" width="125px" height="201"style="border-right:1px solid #EBEBEB"/>
+											<img src="images/b5-2.jpg" alt="" width="125px" height="201"style="border-right:1px solid #EBEBEB"/>
+											<img src="images/b5-3.jpg" alt="" width="125px" height="201"style="border-right:1px solid #EBEBEB"/>
+											<img src="images/b5-4.jpg" alt="" width="125px" height="201"/>
+
+										</div>
+
+										<div id="alex_ban_bot4">
+											<img src="images/b3-1.jpg" alt="" width="250px" height="155" style="margin-top:23px;margin-left:6px;margin-right:4px;"/>
+											<img src="images/b3-2.jpg" alt="" width="250px" height="155" style="margin-top:23px;"/>
+
+										</div>
+
+										<div id="alex_ban_bot5">
+											<img src="images/b4-1.jpg" alt="" width="125px" height="201"style="border-right:1px solid #EBEBEB;margin-right:0;"/>
+											<img src="images/b4-2.jpg" alt="" width="125px" height="201"style="border-right:1px solid #EBEBEB"/>
+											<img src="images/b4-3.jpg" alt="" width="125px" height="201"style="border-right:1px solid #EBEBEB"/>
+											<img src="images/b4-4.jpg" alt="" width="127px" height="201"/>
+
+										</div>
+
+										<div id="alex_ban_bot6">
+											<a href="#"style="border-bottom:1px solid #bebebe;border-right:1px solid #bebebe;"><img src="images/b6-1.png" alt=""/></a>
+											<a href="#"style="border-bottom:1px solid #bebebe;border-right:1px solid #bebebe;"><img src="images/b6-2.jpg" alt=""/></a>
+											<a href="#"style="border-bottom:1px solid #bebebe;border-right:1px solid #bebebe;"><img src="images/b6-3.jpg" alt=""/></a>
+											<a href="#"style="border-bottom:1px solid #bebebe;"><img src="images/b6-4.jpg" alt=""/></a>
+											<a href="#"style="border-bottom:1px solid #bebebe;border-right:1px solid #bebebe;"><img src="images/b6-5.jpg" alt=""/></a>
+											<a href="#"style="border-bottom:1px solid #bebebe;border-right:1px solid #bebebe;"><img src="images/b6-6.jpg" alt=""/></a>
+											<a href="#"style="border-bottom:1px solid #bebebe;border-right:1px solid #bebebe;"><img src="images/b6-7.jpg" alt=""/></a>
+											<a href="#"style="border-bottom:1px solid #bebebe;"><img src="images/b6-8.jpg" alt=""/></a>
+											<a href="#"style="border-right:1px solid #bebebe;"><img src="images/b6-9.jpg" alt=""/></a>
+											<a href="#"style="border-right:1px solid #bebebe;"><img src="images/b6-10.jpg" alt=""/></a>
+											<a href="#"style="border-right:1px solid #bebebe;"><img src="images/b6-11.jpg" alt=""/></a>
+											<a href="#"><img src="images/b6-12.jpg" alt=""/></a>	
+										</div>
+
+										<div id="alex_ban_bot1">
+											<div class="fl" style="width:172px;height:201px;border-right:1px solid #EBEBEB;">
+
+												<img src="image/04.jpg" width="172px" height="201px">
+											</div>
+											<div class="fl" style="width:172px;height:201px;border-right:1px solid #EBEBEB;">
+												<div style="width:172px;height:100px;border-bottom:1px solid #EBEBEB;">
+													<img src="image/05.jpg" width="172px" height="100">
+												</div>
+												<div>
+													<img src="image/07.jpg" width="172px" height="100">
+												</div>
+											</div>
+											<div class="fl" style="width:172px;height:201px;border-right:1px solid #EBEBEB;">
+												<div style="width:173px;height:100px;border-bottom:1px solid #EBEBEB;">
+													<img src="image/06.jpg" width="172px" height="100">
+												</div>
+												<div>
+													<img src="image/08.jpg" width="172px" height="100">
+												</div>
+											</div>
+
+										</div>
+									</div>
+									<ul class="sld-ft-nav" id="alex_indicators2">
+										<li class="fl" style="background-color: #FF6537;"></li>
+										<li class="fl"></li>
+										<li class="fl"></li>
+										<li class="fl"></li>
+										<li class="fl"></li>
+										<li class="fl"></li>
+									</ul>
+								</div>
+								<!--  -->
+							</div>
+							<!--  -->
+						</div>
+						<!--  -->
+						<div class="fl sub-column" >
+							<div style="widht:160px;height:280px;">
+								<img src="image/09.jpg">
+							</div>
+							<div style="width:160px;height:230px;">
+								<h5 class="h5">今日热卖</h5>
+								<div style="height:200px;">
+									<img src="image/10.jpg">
+								</div>
+							</div>
+						</div>
+						<!--  -->
+						<div class="cb" style="width:890px;height:10px;"></div>
+						<div class="cb" style="width:890px;height:74px;background-color:white;">
+							<div class="belt fl" style="color: #9a745f;">
+								<div class="yuan fl">
+									<img src="image/TB_03.jpg" >
+								</div>
+								<div class="fl"> <strong class="strong">炫酷极客控</strong>
+									<span class="span">黑科技发掘地</span> <em class="em">人气2539196</em>
+								</div>
+							</div>
+							<div class="belt fl" style="color: #81c18f;">
+								<div class="yuan fl">
+									<img src="image/TB_02.jpg" >
+								</div>
+								<div class="fl">
+									<strong class="strong">游戏外设迷</strong>
+									<span class="span">PK刷怪靠它</span> <em class="em">人气2539196</em>
+								</div>
+							</div>
+							<div class="belt fl" style="color: #72a5f6;">
+								<div class="yuan fl">
+									<img src="image/TB_03.jpg" >
+								</div>
+								<div class="fl">
+									<strong class="strong">码农style</strong>
+									<span class="span">码农生存指南</span>
+									<em class="em">人气983673</em>
+								</div>
+							</div>
+							<div class="belt fl" style="color: #9a745f;">
+								<div class="yuan fl">
+									<img src="image/TB_03.jpg" >
+								</div>
+								<div class="fl">
+									<strong class="strong">炫酷极客控</strong>
+									<span class="span">黑科技发掘地</span>
+									<em class="em">人气2539196</em>
+								</div>
+							</div>
+							<div class="belt fl" style="color: #9a745f;">
+								<div class="yuan fl">
+									<img src="image/TB_03.jpg" >
+								</div>
+								<div class="fl">
+									<strong class="strong">炫酷极客控</strong>
+									<span class="span">黑科技发掘地</span>
+									<em class="em">人气2539196</em>
+								</div>
+							</div>
+						</div>
+					</div>  <!-- 检查这个 -->
+					<div class="col-right fl">
+						<div class="member">
+							<div class="avatar-wrapper">
+								<img  src="image/getAvatar.do">
+							</div>
+							<span class="member-nick-info">
+								Hi!
+								<strong style="font-weight: 400;">你好</strong>
+							</span>
+							<p class="member-tjb">
+								领淘金币抵钱
+								<span>或去</span>
+								会员俱乐部
+							</p>
+							<div class="member-ft">
+								<div class="member-logout">
+									<ul>
+										<li class="fl">登录</li>
+										<li class="fl">注册</li>
+										<li class="fl">开店</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="tbh-notice">
+							<ul class="notice-hd">
+								<li class="fl">公告</li>
+								<li class="fl">规则</li>
+								<li class="fl">论坛</li>
+								<li class="fl">安全</li>
+								<li class="fl">公益</li>
+							</ul>
+							<div class="notice-bd">
+								<ul>
+									<li class="fl">成人用品行业标准变更</li>
+									<li class="fl">全球购市场管理规范变更</li>
+									<li class="fl">新增淘宝网农药行业标</li>
+									<li class="fl">自检自查实施细则变更</li>
+								</ul>
+							</div>
+						</div>
+						<!--  -->
+						<div class="conve">
+							<ul class="conve-list" id="alex_conve_list">
+								<!-- style="border-color: #F40;width: 69px;position: relative;color:#F40" -->
+								<li class="fl">充话费</li>
+								<li class="fl">游戏</li>
+								<li class="fl">旅行</li>
+								<li class="fl">车险</li>
+							</ul>
+							<ul class="conve-list">
+								<li class="fl" >彩票</li>
+								<li class="fl">电影</li>
+								<li class="fl">酒店</li>
+								<li class="fl">理财</li>
+							</ul>
+							<ul class="conve-list">
+								<li class="fl" >找服务</li>
+								<li class="fl">音乐</li>
+								<li class="fl">水电煤</li>
+								<li class="fl">火车票</li>
+							</ul>
+
+
+							<div class="conve-bd-box" id="alex_conve">
+								<div class="conve-tabs">
+									<ul>
+										<li class="fl" style="color:#F40">充话费</li>
+										<li class="fl">充流量</li>
+										<li class="fl">充固话</li>
+										<li class="fl">充宽带</li>
+									</ul>
+								</div>
+								<!--  -->
+								<div id="tbr-phone">
+									<div class="conve-control-group" id="tbr-phone-number">
+										<div class="conve-input">
+											<input type="text" placeholder="请输入手机号码">
+										</div>
+										<div class="conve-input">
+											<input type="text">
+										</div>
+									</div>
+									<div style="width:300px;height:6px;"></div>
+									<div id="J_TbrPhonePrice">
+										<div class="tbr-block-hd fl">售价</div>
+										<div class="tbr-block-bd fl">
+											<span class="tbr-price">
+												<span>$</span>
+												<strong style="color: #F60;font-weight: 700;font-family: verdana,arial;margin-left:-5px;">49-49.8</strong>
+											</span>
+										</div>
+									</div>
+									<div style="width:300px;height:5px;" class="cb"></div>
+									<div class="tbr-block cb">
+										<div class="tbr-btn">立即充值</div>
+									</div>
+								</div>
+								<!--  -->
+							</div>
+						</div>
+						<!--  -->
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div style="width:100%;">
+		</div>
+	</div>
+
+
+
+
+
+	<!-- 翁淑颖/曾绿渊 -->
+	<div id="Z-W-wrapper">
+		<div id="wrapper_lift">
+			<!-- 曾绿渊 -->
+			<div id="zly_cb">
+				<div id="zly_j-head">
+					<h3>更多➤</h3>
+					<img src="images/TB90.jpg_.webp" alt="" />
+					<p class="pp">自信穿出来！国内小众原创</p>
+					<div id="zly_j-foot">
+						<p>有句话是这样说的吧：撞衫不可怕，谁丑谁尴尬，诶，在这个看</p>
+					</div>
+				</div>
+				<div id="zly_j-goods">
+					<div id="zly_j-goods-1">
+						<div class="a1" href="">
+							<span><img src="images/TB15.jpg_.webp" alt="" /></span>
+							<strong>Trotters 低帮鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1GCZ.jpg_.webp" alt="" /></span>
+							<strong>JOHN HARDY 手链</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1GA.jpg_.webp" alt="" /></span>
+							<strong>Splendid/品峰 凉鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1E.jpg_.webp" alt="" /></span>
+							<strong>KAO/花王 唇膏/口红</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1GT.jpg_.webp" alt="" /></span>
+							<strong>Trotters 低帮鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1H.jpg_.webp" alt="" /></span>
+							<strong>Trotters 低帮鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB10M.jpg_.webp" alt="" /></span>
+							<strong>Trotters 低帮鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1ZiA.jpg_.webp" alt="" /></span>
+							<strong>Trotters 低帮鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1GCZ.jpg_.webp" alt="" /></span>
+							<strong>Trotters 低帮鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+						<div class="a1" href="">
+							<span><img src="images/TB1ZIZ8.jpg_.webp" alt="" /></span>
+							<strong>Trotters 低帮鞋</strong>
+							<p>这双鞋是我去年送个我男朋友的生日礼物，平时一直在穿，</p>
+							<em>102 人说好</em>
+						</div>
+					</div>
+					<div id="zly_j-goods-2">
+						<i></i>
+						<span>换一组看看</span>
+					</div>
+				</div>
+				<div id="zly_j-goods-3">
+					<ul class="shop-list">
+						<li>
+							<div class="zly_left-1">
+								<strong>今日推荐</strong>
+								<p style="color:#999;font-size:12px;margin-top:8px;">暂无店铺评价</p>
+							</div>
+							<div class="zly_j-one">
+								<div class="zly_j-one1" style="float:left;">
+									<img style="width:89px;height:89px;" src="images/TB2vT2.jpg_100x100.jpg" alt="" />
+									<img style="width:89px;height:89px;margin-top:2px;" src="images/TB2g4.jpg_100x100.jpg" alt="" />
+								</div>
+								<img style="float:right;width:180px;height:180px;" src="images/TB2_FS.jpg_200x200.jpg" alt="" />
+							</div>
+						</li>
+						<li>
+							<div class="zly_left-1">
+								<strong>包包控</strong>
+								<p style="color:#999;font-size:12px;margin-top:8px;">暂无店铺评价</p>
+							</div>
+							<div class="zly_j-one">
+								<div class="zly_j-one1" style="float:left;">
+									<img style="width:89px;height:89px;" src="images/TB2tUZoe.jpg_100x100.jpg" alt="" />
+									<img style="width:89px;height:89px;margin-top:2px;" src="images/TB1NM.jpg" alt="" />
+								</div>
+								<img style="float:right;width:180px;height:180px;" src="images/TB17GM.jpg" alt="" />
+							</div>
+						</li>
+						<li>
+							<div class="zly_left-1">
+								<strong>推荐栏目</strong>
+								<p style="color:#999;font-size:12px;margin-top:8px;">暂无店铺评价</p>
+							</div>
+							<div class="zly_j-one">
+								<div class="zly_j-one1" style="float:left;">
+									<img style="width:89px;height:89px;" src="images/TB2orZ9.jpg_100x100.jpg" alt="" />
+									<img style="width:89px;height:89px;margin-top:2px;" src="images/TB2QsV.jpg_100x100.jpg" alt="" />
+								</div>
+								<img style="float:right;width:180px;height:180px;" src="images/TB2uvO7.jpg_200x200.jpg" alt="" />
+							</div>
+						</li>
+						<li>
+							<div class="zly_left-1">
+								<strong>吃吃吃</strong>
+								<p style="color:#999;font-size:12px;margin-top:8px;">暂无店铺评价</p>
+							</div>
+							<div class="zly_j-one">
+								<div class="zly_j-one1" style="float:left;">
+									<img style="width:89px;height:89px;" src="images/TB2vN16.jpg_100x100.jpg" alt="" />
+									<img style="width:89px;height:89px;margin-top:2px;" src="images/TB2DKJ6.jpg_100x100.jpg" alt="" />
+								</div>
+								<img style="float:right;width:180px;height:180px;" src="images/TB2pUF6.jpg_200x200.jpg" alt="" />
+							</div>
+						</li>
+					</ul>
+					<div id="zly_j-goods-2">
+						<i></i>
+						<span style="color:#666;">查看更多店</span>
+					</div>
+				</div>
+				<div id="zly_j-goods-4">
+					<h4 style="color:3C3C3C;">今日特卖</h4>
+					<img style="margin-top:5px; width:285px; height:250px;" src="images/TB11g.jpg" alt="" />
+				</div>
+			</div>
+
+
+			<!-- 翁淑颖 -->
+			<!-- 我常逛的 -->
+			<div id="often_visit">
+				<div id="often_visit_title"><h2></h2></div>
+
+				<div id="often1" class="often fl">
+					<div class="of1-left fl">
+						<a href="#"><img src="images/Image63.jpg" alt="" /></a>
+						<div id="of1_nav"class="of1-nav">
+							<strong>热门TOP</strong>
+							<div class="of1-nav1">
+								<a href="#">iPhone7</a><br />
+								<a href="#">S8</a><br />
+								<a href="#">游戏鼠标</a><br />
+								<a href="#">机械键盘</a><br />
+								<a href="#">单反相机</a><br />
+								<a href="#">AppleWatch</a><br />
+								<a href="#">DIY主机</a><br />
+								<a href="#">智能机器人</a><br />
+								<a href="#">制氧机</a><br />
+								<a href="#">榨汁机</a>
+							</div>
+						</div>
+					</div>
+					<div class="of1-right fl">
+						<div class="of1-right-top">
+							<a href="#"><img src="images/Image66.jpg" alt="" class="fl"/></a>
+							<a href="#"><img src="images/Image88.jpg" alt="" class="fl"/></a>
+							<div class="of1-right-top1 fl">
+								<a href="#"><strong>数码好货</strong><br /><em>等你来看</em><br /><img src="images/Image59.jpg" alt="" class="fr"/></a>
+								<a href="#"><strong>品质家电</strong><br /><em>生活新选</em><br /><img src="images/Image45.jpg" alt="" class="fr"/></a>
+							</div>
+						</div>
+						<div class="of1-right-bot">
+							<div class="of1-right-bot1 fl">										
+								<a href="#">
+									<img src="images/Image85.jpg" alt="" />
+									<div class="alex-often-bot-ani">数码狂欢节
+										<div class="alex-ani-top">活动</div>
+										<div style="color:#666;">为你精选数码行业优质好货</div>
+									</div>
+								</a>										
+							</div>
+							<a href="#" class="of1-right-bot-a fl"><img src="images/Image58.jpg" alt="" /></a>
+							<a href="#" class="of1-right-bot-a fl"><img src="images/Image65.jpg" alt="" /></a>
+						</div>					
+					</div>
+				</div>
+
+				<div id="often2" class="often fr">
+					<div class="of1-left fl">
+						<a href="#"><img src="images/Image38.jpg" alt="" /></a>
+						<div id="of1_nav2"class="of1-nav">
+							<strong>热门TOP</strong>
+							<div class="of1-nav1">
+								<a href="#">iPhone7</a><br />
+								<a href="#">S8</a><br />
+								<a href="#">游戏鼠标</a><br />
+								<a href="#">机械键盘</a><br />
+								<a href="#">单反相机</a><br />
+								<a href="#">AppleWatch</a><br />
+								<a href="#">DIY主机</a><br />
+								<a href="#">智能机器人</a><br />
+								<a href="#">制氧机</a><br />
+								<a href="#">榨汁机</a>
+							</div>
+						</div>
+					</div>
+					<div class="of1-right fl">
+						<div class="of1-right-top">
+							<a href="#"><img src="images/Image68.jpg" alt="" class="fl"/></a>
+							<a href="#"><img src="images/Image83.jpg" alt="" class="fl"/></a>
+							<div class="of1-right-top1 fl">
+								<a href="#"><strong>窗边景</strong><br /><em>搭在一起</em><br /><img src="images/Image74.jpg" alt="" class="fr"/></a>
+								<a href="#"><strong>装修预约</strong><br /><em>量房设计</em><br /><img src="images/Image48.jpg" alt="" class="fr"/></a>
+							</div>
+						</div>
+						<div class="of1-right-bot">
+							<div class="of1-right-bot1 fl">
+								<a href="#">
+									<img src="images/Image44.jpg" alt="" />
+									<div class="alex-often-bot-ani">夏日换季好货选
+										<div class="alex-ani-top" style="background-color:#E9A326;">抢新鲜</div>
+										<div style="color:#666;">每天为你挑选当天上新的优选商品,更有低至五折的优惠价格</div>
+									</div>
+								</a>										
+							</div>
+							<a href="#" class="of1-right-bot-a fl"><img src="images/Image64.jpg" alt="" /></a>
+							<a href="#" class="of1-right-bot-a fl"><img src="images/Image69.jpg" alt="" /></a>
+						</div>					
+					</div>
+				</div>
+
+				<div id="often3" class="often fl">
+					<div class="of1-left fl">
+						<a href="#"><img src="images/Image62.jpg" alt="" /></a>
+						<div id="of1_nav3"class="of1-nav">
+							<strong>热门TOP</strong>
+							<div class="of1-nav1">
+								<a href="#">连衣裙</a><br />
+								<a href="#">单鞋</a><br />
+								<a href="#">沙发</a><br />
+								<a href="#">真皮女包</a><br />
+								<a href="#">风衣</a><br />
+								<a href="#">按摩靠垫</a><br />
+								<a href="#">运动服</a><br />
+								<a href="#">四件套</a><br />
+								<a href="#">行李箱</a><br />
+								<a href="#">牛仔裤</a>
+							</div>
+						</div>
+					</div>
+					<div class="of1-right fl">
+						<div class="of1-right-top">
+							<div class="of3-left">
+								<a href="#"><img src="images/Image40.jpg" alt="" class="fl"/></a>
+								<a href="#"><img src="images/Image75.jpg" alt="" class="fl"/></a>
+							</div>
+							<a href="#"><img src="images/222.jpg" alt="" class="fl"/></a>
+							<div class="of1-right-top1 fl" id="of3_right">
+
+								<a href="#">
+									<img src="images/34.jpg" alt="" id="right_img"/>
+
+								</a>
+
+							</div>
+						</div>
+						<div class="of1-right-bot">
+							<div class="of1-right-bot1 fl">
+								<a href="#">
+									<img src="images/123.jpg" alt="" />
+									<div class="alex-often-bot-ani">小户型家居这样
+										<div class="alex-ani-top" style="background-color:#E44346;">好货不贵</div>
+										<div style="color:#666;">为你精选数码行业优质好货</div>
+									</div>
+								</a>
+							</div>
+							<div class="of3-right-bot">
+								<a href="#"><strong>国货精品</strong><br /><em>制造首选</em><br /><img src="images/Image71.jpg" alt="" class="fr"/></a>
+								<a href="#"><strong>猜你喜欢</strong><br /><em>好货不贵</em><br /><img src="images/Image52.jpg" alt="" class="fr"/></a>
+							</div>
+						</div>					
+					</div>
+				</div>
+
+				<div id="often4" class="often fr">
+					<div class="of1-left fl">
+						<a href="#"><img src="images/Image61.jpg" alt="" /></a>
+						<div id="of1_nav4"class="of1-nav">
+							<strong>热门TOP</strong>
+							<div class="of1-nav1">
+								<a href="#">T恤</a><br />
+								<a href="#">衬衫</a><br />
+								<a href="#">针织衫</a><br />
+								<a href="#">连衣裙</a><br />
+								<a href="#">东大门</a><br />
+								<a href="#">卫衣</a><br />
+								<a href="#">雪纺衫</a><br />
+								<a href="#">凉鞋</a><br />
+								<a href="#">单肩包</a><br />
+								<a href="#">单鞋</a>
+							</div>
+						</div>
+					</div>
+					<div class="of1-right fl">
+						<div class="of1-right-top">
+							<div class="of3-left">
+								<a href="#"><img src="images/Image46.jpg" alt="" class="fl"/></a>
+								<a href="#"><img src="images/Image55.jpg" alt="" class="fl"/></a>
+							</div>
+							<a href="#"><img src="images/234.jpg" alt="" class="fl"/></a>
+							<div class="of1-right-top1 fl" id="of3_right">
+
+								<a href="#"><img src="images/444.jpg" alt="" id="right_img"/></a>
+							</div>
+						</div>
+						<div class="of1-right-bot">
+							<div class="of1-right-bot1 fl">
+								<a href="#">
+									<img src="images/1234.jpg" alt="" />
+									<div class="alex-often-bot-ani">内衣外套超减龄
+										<div class="alex-ani-top"style="background-color:#FE6FA6;">潮搭</div>
+										<div style="color:#666;">为你精选数码行业优质好货</div>
+									</div>
+								</a>
+							</div>
+							<div class="of3-right-bot">
+								<a href="#"><strong>“包包”</strong><br /><em>能治百病</em><br /><img src="images/Image82.jpg" alt="" class="fr"/></a>
+								<a href="#"><strong>创意家居</strong><br /><em>温馨小家</em><br /><img src="images/Image41.jpg" alt="" class="fr"/></a>
+							</div>
+						</div>					
+					</div>
+				</div>
+
+				<img src="images/5454.jpg" alt="" />
+			</div>			
+			<!-- 时尚爆料王 -->
+			<div id="fashion_king">
+				<div id="fashion_title"><h2></h2></div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/icon_fashion.jpg" alt="" />
+
+					</div>
+					<a href="#" class="fas-left">
+						<img src="images/32.jpg" alt="" />
+						<div class="fas-title1">软萌针织衫</div>
+					</a>
+					<a href="#" class="fas-right-top">
+						<img src="images/180.png" alt="" />
+						<div class="fas-title">包治百病</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/181.png" alt="" />
+						<div class="fas-title">女神战靴</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/global.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/fas3.jpg" alt="" />
+						<div class="fas-title">限量口红</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/fas4.jpg" alt="" />
+						<div class="fas-title">精致项链</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/fas2.jpg" alt="" />
+						<div class="fas-title">包治百病</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/fas1.jpg" alt="" />
+						<div class="fas-title">野田珐琅壶</div>
+					</a>
+				</div>
+
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/beautyicon.jpg" alt="" />
+
+					</div>
+					<a href="#" class="fas-left">
+						<img src="images/200.jpg" alt="" />
+						<div class="fas-title1">唇膏精选</div>
+					</a>
+					<a href="#" class="fas-right-top">
+						<img src="images/120.jpg" alt="" />
+						<div class="fas-title">最潮撩汉妆</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/1201.jpg" alt="" />
+						<div class="fas-title">美发良品</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/shopicon.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+			</div>
+			<!-- 品质生活家 -->
+			<div id="quality">
+				<div id="quality_title"><h2></h2></div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB17e2TLVXXXXcKXpXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua1.jpg" alt="" /><br />
+						<div class="qua-top-tit1">正宗牛肉丸</div>
+						<div>Q弹有嚼劲</div>
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua2.jpg" alt="" />
+						<div class="qua-top-tit1">鲜甜石榴</div>
+						<div>薄皮汁水甜</div>
+					</div>
+					<div class="bot-a">
+						<a href="#">应季鲜果</a>
+						<a href="#">精致糕点</a>
+						<a href="#">全球美食</a>
+						<a href="#">烘培原料</a>
+						<a href="#">无辣不欢</a>
+						<a href="#">生猛海鲜</a>
+					</div>				
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB14YAJJFXXXXavXpXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1b4guLVXXXXbjaXXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua1.jpg" alt="" /><br />
+						<div class="qua-top-tit1">正宗牛肉丸</div>
+						<div>Q弹有嚼劲</div>
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua2.jpg" alt="" />
+						<div class="qua-top-tit1">鲜甜石榴</div>
+						<div>薄皮汁水甜</div>
+					</div>
+					<div class="bot-a">
+						<a href="#">应季鲜果</a>
+						<a href="#">精致糕点</a>
+						<a href="#">全球美食</a>
+						<a href="#">烘培原料</a>
+						<a href="#">无辣不欢</a>
+						<a href="#">生猛海鲜</a>
+					</div>				
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB12UGvMpXXXXaRXpXXXXXXXXXX-220-48.jpg_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1jC_1NpXXXXcpaXXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1ZJ_lLVXXXXaEXFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua1.jpg" alt="" /><br />
+						<div class="qua-top-tit1">正宗牛肉丸</div>
+						<div>Q弹有嚼劲</div>
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua2.jpg" alt="" />
+						<div class="qua-top-tit1">鲜甜石榴</div>
+						<div>薄皮汁水甜</div>
+					</div>
+					<div class="bot-a">
+						<a href="#">应季鲜果</a>
+						<a href="#">精致糕点</a>
+						<a href="#">全球美食</a>
+						<a href="#">烘培原料</a>
+						<a href="#">无辣不欢</a>
+						<a href="#">生猛海鲜</a>
+					</div>				
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1Gq2SLVXXXXa9XFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1N9ZONpXXXXbqXVXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua1.jpg" alt="" /><br />
+						<div class="qua-top-tit1">正宗牛肉丸</div>
+						<div>Q弹有嚼劲</div>
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua2.jpg" alt="" />
+						<div class="qua-top-tit1">鲜甜石榴</div>
+						<div>薄皮汁水甜</div>
+					</div>
+					<div class="bot-a">
+						<a href="#">应季鲜果</a>
+						<a href="#">精致糕点</a>
+						<a href="#">全球美食</a>
+						<a href="#">烘培原料</a>
+						<a href="#">无辣不欢</a>
+						<a href="#">生猛海鲜</a>
+					</div>				
+				</div>			
+			</div>
+			<!-- 特色玩味控 -->
+			<div id="feature">
+				<div id="feature_title"><h2></h2></div>
+
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1Gq2SLVXXXXa9XFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1Gq2SLVXXXXa9XFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1Gq2SLVXXXXa9XFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1N9ZONpXXXXbqXVXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua1.jpg" alt="" /><br />
+						<div class="qua-top-tit1">正宗牛肉丸</div>
+						<div>Q弹有嚼劲</div>
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua2.jpg" alt="" />
+						<div class="qua-top-tit1">鲜甜石榴</div>
+						<div>薄皮汁水甜</div>
+					</div>
+					<div class="bot-a">
+						<a href="#">应季鲜果</a>
+						<a href="#">精致糕点</a>
+						<a href="#">全球美食</a>
+						<a href="#">烘培原料</a>
+						<a href="#">无辣不欢</a>
+						<a href="#">生猛海鲜</a>
+					</div>				
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1Gq2SLVXXXXa9XFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1Gq2SLVXXXXa9XFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1Gq2SLVXXXXa9XFXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+
+					<a href="#" class="fas-right">
+						<img src="images/TB1.jpg" alt="" />
+						<div class="fas-title">懒人必备连衣</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB2.jpg" alt="" />
+						<div class="fas-title">小清新家居</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB3.jpg" alt="" />
+						<div class="fas-title">今夏露背杀</div>
+					</a>
+					<a href="#" class="fas-right">
+						<img src="images/TB4.jpg" alt="" />
+						<div class="fas-title">春夏编发tips</div>
+					</a>
+				</div>
+
+				<div class="fashion-list fl">
+					<div class="fas-top">
+						<img src="images/TB1N9ZONpXXXXbqXVXXXXXXXXXX-220-48.png_220x220.jpg" alt="" />
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua1.jpg" alt="" /><br />
+						<div class="qua-top-tit1">正宗牛肉丸</div>
+						<div>Q弹有嚼劲</div>
+					</div>
+					<div class="qua-top fl">
+						<img src="images/qua2.jpg" alt="" />
+						<div class="qua-top-tit1">鲜甜石榴</div>
+						<div>薄皮汁水甜</div>
+					</div>
+					<div class="bot-a">
+						<a href="#">应季鲜果</a>
+						<a href="#">精致糕点</a>
+						<a href="#">全球美食</a>
+						<a href="#">烘培原料</a>
+						<a href="#">无辣不欢</a>
+						<a href="#">生猛海鲜</a>
+					</div>				
+				</div>			
+			</div>
+			<!-- 实惠专业户 -->
+			<div id="cheap">
+				<div id="cheap_title"><h2></h2></div>
+
+				<div class="cheap1 fl">
+					<div class="cheap1-top">
+						<img src="images/TB1EcL_LVXXXXatXVXXXXXXXXXX-126-36.png_110x110.jpg" alt="" />
+						<div class="cheap1-top-r fr">抢购进行中</div>
+					</div>
+					<div class="cheap1-bot">
+						<img src="images/TB2Y3feteJ8puFjy1XbXXagqVXa_!!0-juitemmedia.jpg_120x120.jpg" alt="" />
+						<div class="cheap1-left">短袖衬衫女韩范宽松条纹小清新</div>
+						<div class="cheap1-prise">￥59</div>
+						<div class="cheap1-buy">已抢购1690件</div>
+					</div>
+				</div>
+
+				<div class="cheap2 fl">
+					<div class="cheap2-top"><img src="images/TB1zGAfOFXXXXb6XVXXXXXXXXXX-158-36.png_110x110.jpg" alt="" /></div>
+					<div class="cheap2-bot">
+						<img src="images/TB17D9IRFXXXXXgapXXXXXXXXXX_!!0-tejia.jpg_120x120.jpg" alt=""  />
+						<div class="cheap2-bot1">优质好货</div>
+						<div class="cheap2-bot2">特价专区</div>
+						<div class="cheap2-bot3">全场包邮</div>
+					</div>
+				</div>
+
+				<div class="cheap2 fl">
+					<div class="cheap2-top"><img src="images/TB1zGAfOFXXXXb6XVXXXXXXXXXX-158-36.png_110x110.jpg" alt="" /></div>
+					<div class="cheap2-bot">
+						<img src="images/TB17D9IRFXXXXXgapXXXXXXXXXX_!!0-tejia.jpg_120x120.jpg" alt=""  />
+						<div class="cheap2-bot1">优质好货</div>
+						<div class="cheap2-bot2">特价专区</div>
+						<div class="cheap2-bot3">全场包邮</div>
+					</div>
+				</div>
+
+				<div class="cheap2 fl">
+					<div class="cheap2-top"><img src="images/TB1zGAfOFXXXXb6XVXXXXXXXXXX-158-36.png_110x110.jpg" alt="" /></div>
+					<div class="cheap2-bot">
+						<img src="images/TB17D9IRFXXXXXgapXXXXXXXXXX_!!0-tejia.jpg_120x120.jpg" alt=""  />
+						<div class="cheap2-bot1">优质好货</div>
+						<div class="cheap2-bot2">特价专区</div>
+						<div class="cheap2-bot3">全场包邮</div>
+					</div>
+				</div>
+
+				<div class="cheap1 fl">
+					<div class="cheap1-top">
+						<img src="images/TB1EcL_LVXXXXatXVXXXXXXXXXX-126-36.png_110x110.jpg" alt="" />
+						<div class="cheap1-top-r fr">抢购进行中</div>
+					</div>
+					<div class="cheap1-bot">
+						<img src="images/TB2Y3feteJ8puFjy1XbXXagqVXa_!!0-juitemmedia.jpg_120x120.jpg" alt="" />
+						<div class="cheap1-left">短袖衬衫女韩范宽松条纹小清新</div>
+						<div class="cheap1-prise">￥59</div>
+						<div class="cheap1-buy">已抢购1690件</div>
+					</div>
+				</div>
+
+				<div class="cheap2 fl">
+					<div class="cheap2-top"><img src="images/TB1zGAfOFXXXXb6XVXXXXXXXXXX-158-36.png_110x110.jpg" alt="" /></div>
+					<div class="cheap2-bot">
+						<img src="images/TB17D9IRFXXXXXgapXXXXXXXXXX_!!0-tejia.jpg_120x120.jpg" alt=""  />
+						<div class="cheap2-bot1">优质好货</div>
+						<div class="cheap2-bot2">特价专区</div>
+						<div class="cheap2-bot3">全场包邮</div>
+					</div>
+				</div>
+
+				<div class="cheap2 fl">
+					<div class="cheap2-top"><img src="images/TB1zGAfOFXXXXb6XVXXXXXXXXXX-158-36.png_110x110.jpg" alt="" /></div>
+					<div class="cheap2-bot">
+						<img src="images/TB17D9IRFXXXXXgapXXXXXXXXXX_!!0-tejia.jpg_120x120.jpg" alt=""  />
+						<div class="cheap2-bot1">优质好货</div>
+						<div class="cheap2-bot2">特价专区</div>
+						<div class="cheap2-bot3">全场包邮</div>
+					</div>
+				</div>
+
+				<div class="cheap2 fl">
+					<div class="cheap2-top"><img src="images/TB1zGAfOFXXXXb6XVXXXXXXXXXX-158-36.png_110x110.jpg" alt="" /></div>
+					<div class="cheap2-bot">
+						<img src="images/TB17D9IRFXXXXXgapXXXXXXXXXX_!!0-tejia.jpg_120x120.jpg" alt=""  />
+						<div class="cheap2-bot1">优质好货</div>
+						<div class="cheap2-bot2">特价专区</div>
+						<div class="cheap2-bot3">全场包邮</div>
+					</div>
+				</div>
+				<img src="images/TB2nzphtMxlpuFjSszgXXcJdpXa_!!154-0-luban.jpg" alt="" />
+			</div>
+			<!-- 热卖单品 -->
+			<div id="hot">
+				<div id="hot_title">热卖单品</div>
+				<div id="hot_nav">
+					<ul id="hot_nav_list" >
+						<li>客厅灯</li>
+						<li>床垫</li>
+						<li>电脑椅</li>
+						<li>沙发垫</li>
+						<li>鞋柜</li>
+						<li>衣柜</li>
+						<li>凉鞋男</li>
+						<li>沙发</li>
+						<li>男内裤</li>
+						<li>窗帘</li>
+						<li>运动鞋</li>
+						<li>拉杆箱</li>
+						<li>牛仔裤</li>
+						<li>茶几</li>
+						<li>凉席</li>
+						<li>电脑桌</li>
+						<li>椅子</li>
+						<li>蚊帐</li>
+						<li>男T恤</li>
+						<li>T恤男</li>
+						<li>男包</li>
+						<li>面膜</li>
+						<li>真丝裙</li>
+					</ul>
+				</div>
+				<div id="Alex_hot_main">
+					<div class="hot-item1 fl">
+						<div class="hot-content1">
+							<img src="images/hot1.jpg" alt="" />
+							<div class="hot-content1-prise">¥ 149.00</div>
+							<div class="hot-content1-sole">月销123笔</div>
+							<div class="hot-content1-evaluate">掌柜人不错,服务好热情的!</div>
+							<div class="hot-content1-bot">评价 74 收藏 798</div>
+						</div>
+					</div>
+					<div class="hot-item2 fl">
+						<div class="hot-item2-top">
+							<img src="images/hot2.jpg" alt="" />
+							<div class="hot-item2-prise">¥ 255.00</div>
+							<div class="hot-item2-sole">月销123笔</div>
+						</div>
+						<div class="hot-item2-top">
+							<img src="images/hot2.jpg" alt="" />
+							<div class="hot-item2-prise">¥ 255.00</div>
+							<div class="hot-item2-sole">月销123笔</div>
+						</div>
+					</div>
+					<div class="hot-item1 fl">
+						<div class="hot-content1">
+							<img src="images/hot1.jpg" alt="" />
+							<div class="hot-content1-prise">¥ 149.00</div>
+							<div class="hot-content1-sole">月销123笔</div>
+							<div class="hot-content1-evaluate">掌柜人不错,服务好热情的!</div>
+							<div class="hot-content1-bot">评价 74 收藏 798</div>
+						</div>
+					</div>
+					<div class="hot-item2 fl">
+						<div class="hot-item2-top">
+							<img src="images/hot2.jpg" alt="" />
+							<div class="hot-item2-prise">¥ 255.00</div>
+							<div class="hot-item2-sole">月销123笔</div>
+						</div>
+						<div class="hot-item2-top">
+							<img src="images/hot2.jpg" alt="" />
+							<div class="hot-item2-prise">¥ 255.00</div>
+							<div class="hot-item2-sole">月销123笔</div>
+						</div>
+					</div>
+					<div class="hot-item1 fl">
+						<div class="hot-content1">
+							<img src="images/hot1.jpg" alt="" />
+							<div class="hot-content1-prise">¥ 149.00</div>
+							<div class="hot-content1-sole">月销123笔</div>
+							<div class="hot-content1-evaluate">掌柜人不错,服务好热情的!</div>
+							<div class="hot-content1-bot">评价 74 收藏 798</div>
+						</div>
+					</div>
+					<div class="hot-item2 fl">
+						<div class="hot-item2-top">
+							<img src="images/hot2.jpg" alt="" />
+							<div class="hot-item2-prise">¥ 255.00</div>
+							<div class="hot-item2-sole">月销123笔</div>
+						</div>
+						<div class="hot-item2-top">
+							<img src="images/hot2.jpg" alt="" />
+							<div class="hot-item2-prise">¥ 255.00</div>
+							<div class="hot-item2-sole">月销123笔</div>
+						</div>
+					</div>
+					<div class="hot-item3 fl"><img src="images/hot10.jpg" alt="" /></div>
+					<div class="hot-item3 fl"><img src="images/hot11.jpg" alt="" /></div>
+					<div class="hot-item3 fl"><img src="images/hot12.jpg" alt="" /></div>
+				</div>			
+			</div>
+			<!-- 淘宝直播 -->
+			<div id="live">
+				<div id="live_title"><h3>淘宝直播</h3></div>
+				<div id="Alex-live-mian">
+					<div class="live-video-big fl">
+						<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+						<img style="width:390px; height:390px;"src="images/livebig.jpg" alt="" />
+						<h3>衣服搭的好 路人变主角</h3>
+						<div class="live-big-bottom">
+							<div class="live-big-btn fl">直播</div>
+							<div class="live-big-count fr">1022观看</div>
+						</div>
+					</div>
+
+					<ul class="live-video-small fr">
+
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+						<li class="live-video-lis fl">
+							<p><img src="images/liveicon.jpg" alt="" />我是迷糊璐cc</p>
+							<img style="width:160px; height:160px;"src="images/livebig.jpg" alt="" />
+							<h5>衣服搭的好 路人变主角</h5>
+							<div class="live-small-bottom">
+								<div class="live-small-btn fl">直播</div>
+								<div class="live-small-count fr">1022观看</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- 必买清单 -->
+			<div id="must_buy">
+				<div id="must_buy_title"><h3>必买清单</h3></div>
+				<div class="must-buy-contant fl">
+					<h3>被抄最多的大师椅你也买得起</h3>
+					<p class="must-p1">被疯狂抄款的大师经典椅，如何在时尚的洪流中立于不败之地？它们背后的故事都有什么？只要你喜欢，这些大师经典椅，你也买得起！即便是椅子，一旦有大牌的设计，也难逃“被抄袭”的命运。不过换个角度想，被抄何尝不</p>
+					<ul>
+						<li><img src="images/must1.jpg" alt="" /></li>
+						<li><img src="images/must2.jpg" alt="" /></li>
+						<li><img src="images/must3.jpg" alt="" /></li>
+					</ul>
+					<p class="must-p2">Arts生活家 分享10个宝贝</p>
+				</div>
+				<div class="must-buy-contant fl">
+					<h3>被抄最多的大师椅你也买得起</h3>
+					<p class="must-p1">被疯狂抄款的大师经典椅，如何在时尚的洪流中立于不败之地？它们背后的故事都有什么？只要你喜欢，这些大师经典椅，你也买得起！即便是椅子，一旦有大牌的设计，也难逃“被抄袭”的命运。不过换个角度想，被抄何尝不</p>
+					<ul>
+						<li><img src="images/must1.jpg" alt="" /></li>
+						<li><img src="images/must2.jpg" alt="" /></li>
+						<li><img src="images/must3.jpg" alt="" /></li>
+					</ul>
+					<p class="must-p2">Arts生活家 分享10个宝贝</p>
+				</div>
+				<div class="must-buy-contant fl">
+					<h3>被抄最多的大师椅你也买得起</h3>
+					<p class="must-p1">被疯狂抄款的大师经典椅，如何在时尚的洪流中立于不败之地？它们背后的故事都有什么？只要你喜欢，这些大师经典椅，你也买得起！即便是椅子，一旦有大牌的设计，也难逃“被抄袭”的命运。不过换个角度想，被抄何尝不</p>
+					<ul>
+						<li><img src="images/must1.jpg" alt="" /></li>
+						<li><img src="images/must2.jpg" alt="" /></li>
+						<li><img src="images/must3.jpg" alt="" /></li>
+					</ul>
+					<p class="must-p2">Arts生活家 分享10个宝贝</p>
+				</div>
+				<div class="must-buy-contant fl">
+					<h3>被抄最多的大师椅你也买得起</h3>
+					<p class="must-p1">被疯狂抄款的大师经典椅，如何在时尚的洪流中立于不败之地？它们背后的故事都有什么？只要你喜欢，这些大师经典椅，你也买得起！即便是椅子，一旦有大牌的设计，也难逃“被抄袭”的命运。不过换个角度想，被抄何尝不</p>
+					<ul>
+						<li><img src="images/must1.jpg" alt="" /></li>
+						<li><img src="images/must2.jpg" alt="" /></li>
+						<li><img src="images/must3.jpg" alt="" /></li>
+					</ul>
+					<p class="must-p2">Arts生活家 分享10个宝贝</p>
+				</div>
+			</div>
+			<!-- 猜你喜欢 -->
+			<div id="guess">
+				<div id="guess_title"><h2>猜你喜欢</h2></div>
+				<div>实时推荐最适合你的宝贝</div>
+
+				<ul class="guess-list" id="guess_list">
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<!-- displaynone -->
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+					<li class="guess-like fl">
+						<img src="images/TB19FhwQpXXXXXLXVXXXXXXXXXX_!!0-item_pic.jpg_250x250.jpg" alt="" />
+						<div class="guess-bot">
+							<div class="guess-title">
+								日本docomo鹦鹉兄弟公仔脆皮鸡抱枕绒玩具小鸡吉祥物玩偶生日礼物
+							</div>
+							<div class="guess-prise">
+								<span>￥55</span>
+								<div class="guess-sales fr">销量：555</div>
+							</div>
+						</div>
+						<!-- displayblock -->
+						<div class="ALex-guess">
+							<div class="Alex-guess-find">
+								<p class="Alex-guess-p1">找相似</p>
+								一一一一一一一一一一一
+								<p class="Alex-guess-p2">发现更多相似的宝贝</p>
+
+							</div>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+
+
+		<!-- 曾绿渊 -->
+		<div id="zly_j-module">
+			<div class="zly_mod">
+				<img style="white:32px;height:32px;position: relative;top:10px;left:-25px;"src="images/消费者保障.png" alt="" />
+				<span style="position: relative;left:-25px;">消费者保障</span>
+				<ul style="margin-left:35px; margin-top:10px;">
+					<li>保障范围</li>
+					<li>退货退款流程</li>
+					<li>服务中心</li>
+					<li>更多特色服务</li>
+				</ul>
+			</div>
+			<div class="zly_mod">
+				<img style="white:32px;height:32px;position: relative;top:10px;left:-25px;"src="images/新手上路 .png" alt="" />
+				<span style="position: relative;left:-25px;">新手上路</span>
+				<ul style="margin-left:35px; margin-top:10px;">
+					<li>新手专区</li>
+					<li>消费警示</li>
+					<li>交易安全</li>
+					<li>24小时在线帮助</li>
+					<li>免费开店</li>
+				</ul>
+			</div>
+			<div class="zly_mod">
+				<img style="white:32px;height:32px;position: relative;top:10px;left:-25px;"src="images/付款方式.png" alt="" />
+				<span style="position: relative;left:-25px;">付款方式</span>
+				<ul style="margin-left:35px; margin-top:10px;">
+					<li>快捷支付</li>
+					<li>信用卡</li>
+					<li>余额宝</li>
+					<li>蚂蚁花呗</li>
+					<li>货到付款</li>
+				</ul>
+			</div>
+			<div class="zly_mod-1">
+				<img style="white:32px;height:32px;position: relative;top:10px;left:-25px;"src="images/淘宝特色.png" alt="" />
+				<span style="position: relative;left:-25px;">淘宝特色</span>
+				<ul style="margin-left:35px; margin-top:15px;">
+					<li>手机淘宝</li>
+					<li>旺旺/旺信</li>
+					<li>大众评审</li>
+				</ul>
+			</div>
+		</div>
+		<div id="zly_j-footer">
+			<div class="zly_j-footer-hd">
+				<p style="float:left;margin-top:7px;">
+					<span>阿里巴巴集团</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 淘宝网</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 天猫</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 聚划算</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 全球速卖通</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里巴巴国际交易市场</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 1688</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里妈妈</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 飞猪</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里云计算</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> YunOS</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里通信</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 一淘</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 万网</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 高德</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> UC</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 友盟</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 虾米</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里星球</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 钉钉</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 支付宝</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 优酷</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 土豆</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里健康</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里影业</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 阿里体育</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+				<p style="float:left;margin-top:7px;">
+					<span> 网商银行</span>
+					<b style="color:#ddd;font-size:12px;">|</b>
+				</p>
+			</div>
+			<div class="zly_j-footer-bd">
+				<p style="font-size:12px;color:#3c3c3c;margin-top:10px;">
+					<span>关于淘宝</span>
+					<span>合作伙伴</span>
+					<span>营销中心</span>
+					<span>廉正举报</span>
+					<span>联系客服</span>
+					<span>开放平台</span>
+					<span>诚征英才</span>
+					<span>联系我们</span>
+					<span>网站地图</span>
+					<span>法律声明及隐私权政策</span>
+					<span>知识产权</span>
+					<b style="color:#ddd;">|</b>
+					<em style="margin-left:30px;color:9c9c9c;font-style: normal;">© 2003-2017 Taobao.com 版权所有</em>
+				</p>
+				<p style="font-size:12px;padding-bottom:6px;color:#3c3c3c;margin-top:10px;">
+					<span>网络文化经营许可证：浙网文[2013]0268-027号</span>
+					<b>|</b>
+					<span>增值电信业务经营许可证：浙B2-20080224</span>
+					<b>|</b>
+					<span style="color:#9c9c9c;">信息网络传播视听节目许可证：1109364号</span>
+					<b style="color:#9c9c9c;">|</b>
+					<span style="color:#9c9c9c;">互联网违法和不良信息举报电话：0571-81683755 blxxjb@alibaba-inc.com</span>
+				</p>
+				<p>
+					<div class="zly_footer-3"></div>
+					<span style= "color:#3c3c3c;font-size:12px;position: relative;left:40px;bottom:20px;"> 浙公网安备 33010002000078号</span>
+				</p>
+			</div>
+			<div class="zly_j-footer-last">
+				<img src="images/T1FeW.gif" alt="" />
+				<div class="zly_footer-1"></div>
+				<div class="zly_footer-2"></div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>
